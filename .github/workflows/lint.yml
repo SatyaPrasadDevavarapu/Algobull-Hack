@@ -1,0 +1,52 @@
+name: Python Code Formatting 
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.py'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**.py'
+
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: pip install flake8 
+
+      - name: Check flake8 
+        continue-on-error: false
+        run: |
+          flake8 --count . \
+            --exclude grover,dqc,HierVAE,aizynthfinder
+    
+  black:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: setup python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install black
+
+      - name: Check Black
+        run: |
+          black --check --verbose .
